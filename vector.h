@@ -11,7 +11,7 @@ namespace CGA {
     
     #define X 0
     #define Y 1
-    #define z 2
+    #define Z 2
 
     template<class coordinate_type, size_t dimension = DIM3>
     class vector{
