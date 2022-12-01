@@ -44,10 +44,10 @@ namespace CGA {
         friend double_t dotProduct(const vector<coordinate_type, dimension>& _vect1, const vector<coordinate_type, dimension>& _vect2);
     };
 
-    typedef vector<double_t, DIM2> vector2d;
-    typedef vector<double_t, DIM3> vector3d;
+    typedef vector<double, DIM2> vector2d;
+    typedef vector<double, DIM3> vector3d;
 
-    double_t crossProduct2D(vector2d _vect1, vector2d _vect2);
+    double crossProduct2D(vector2d _vect1, vector2d _vect2);
     vector3d crossProduct3D(vector3d _vect1, vector3d _vect2);
 
     template<class coordinate_type, size_t dimension>
@@ -131,11 +131,11 @@ namespace CGA {
     }
 
     template<class coordinate_type, size_t dimension>
-    double_t dotProduct(const vector<coordinate_type, dimension>& _vect1, const vector<coordinate_type, dimension>& _vect2){
+    double dotProduct(const vector<coordinate_type, dimension>& _vect1, const vector<coordinate_type, dimension>& _vect2){
         if (_vect1.coords.size()!=_vect2.coords.size()){
             return DBL_MIN;
         }
-        double_t product = 0.0;
+        double product = 0.0;
         for (size_t dim = 0, dim< dimension;++dim){
             product = product + _vect1.coords[dim] * _vect2.coords[dim];
         }
