@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <array> 
+#include <math.h>
 
 #include "core.h"
 
@@ -41,7 +42,11 @@ namespace CGA {
 
         void assign (int dim, coordinate_type value);
 
-        friend double_t dotProduct(const vector<coordinate_type, dimension>& _vect1, const vector<coordinate_type, dimension>& _vect2);
+        double magnitude() const;
+
+        friend double dotProduct(const vector<coordinate_type, dimension>& _vect1, const vector<coordinate_type, dimension>& _vect2);
+
+
     };
 
     typedef vector<double, DIM2> vector2d;
@@ -140,6 +145,15 @@ namespace CGA {
             product = product + _vect1.coords[dim] * _vect2.coords[dim];
         }
         return product;
+    }
+
+    template<class coordinate_type, size_t dimension>
+    double vector<coordinate_type, dimension>::magnitude() const{
+        double magnitude = 0.0;
+        for (size_t dim=0;dim<dimension;++dim){
+            magnitude += coords[dim] * coords[dim];        
+        }
+        return sqrt(magnitude);
     }
 
 }
