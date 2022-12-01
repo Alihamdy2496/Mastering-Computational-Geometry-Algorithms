@@ -2,11 +2,17 @@
 
 #include <iostream>
 #include <array> 
+
 #include "core.h"
 
 namespace CGA {
     #define DIM3 3
     #define DIM2 2
+    
+    #define X 0
+    #define Y 1
+    #define z 2
+
     template<class coordinate_type, size_t dimension = DIM3>
     class vector{
         static_assert(std::is_arithmetic<coordinate_type,"vector class can only with arithmetic types">);
@@ -31,6 +37,13 @@ namespace CGA {
 
         // greater than operator
     };
+
+    typedef vector<double_t, DIM2> vector2d;
+    typedef vector<double_t, DIM3> vector3d;
+
+    double_t crossProduct2D(vector2d _vect1, vector2d _vect2);
+    vector3d crossProduct3D(vector3d _vect1, vector3d _vect2);
+
     template<class coordinate_type, size_t dimension>
     bool vector<coordinate_type, dimension>::operator==(const vector<coordinate_type, dimension>& vect){
         for (size_t dim = 0 ; dim < dimension; ++dim){
