@@ -55,6 +55,7 @@ namespace CGA {
     typedef vector<double, DIM3> vector3d;
 
     double crossProduct2D(vector2d _vect1, vector2d _vect2);
+    double scalerTripleProduct(vector3d _vect1,vector3d _vect2,vector3d _vect3);
     vector3d crossProduct3D(vector3d _vect1, vector3d _vect2);
 
     template<class coordinate_type, size_t dimension>
