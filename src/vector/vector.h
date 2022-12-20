@@ -2,7 +2,7 @@
 #include <iostream>
 #include <array> 
 #include <math.h>
-
+#include <cfloat>
 #include "core.h"
 
 namespace CGA {
@@ -15,15 +15,15 @@ namespace CGA {
 
     template<class coordinate_type, size_t dimension = DIM3>
     class vector{
-        static_assert(std::is_arithmetic<coordinate_type,"vector class can only with arithmetic types">);
+        static_assert(std::is_arithmetic<coordinate_type>::value,"vector class can only with arithmetic types");
         static_assert(dimension >= DIM2,"vector dimension is at least should be 2D");
         std::array<coordinate_type, dimension> coords;
 
         public:
         vector(){}
         vector(std::array<coordinate_type, dimension> _coords) : coords(_coords) {}
-        vector(coordinate_typed a, coordinate_typed b, coordinate_typed c) : coords({a, b, c}) {}
-        vector(coordinate_typed a, coordinate_typed b) : coords({a, b}) {}
+        vector(coordinate_type a, coordinate_type b, coordinate_type c) : coords({a, b, c}) {}
+        vector(coordinate_type a, coordinate_type b) : coords({a, b}) {}
         
         // Equality check
         bool operator==(const vector<coordinate_type, dimension>& _vect);
@@ -44,8 +44,10 @@ namespace CGA {
 
         double magnitude() const;
 
-        friend double dotProduct(const vector<coordinate_type, dimension>& _vect1, const vector<coordinate_type, dimension>& _vect2);
+        void normalize(void);
 
+        template<class coordinate_type_d,size_t dimension_d>
+        friend double dotProduct(const vector<coordinate_type_d, dimension_d>& _vect1, const vector<coordinate_type_d, dimension_d>& _vect2);
 
     };
 
@@ -56,9 +58,9 @@ namespace CGA {
     vector3d crossProduct3D(vector3d _vect1, vector3d _vect2);
 
     template<class coordinate_type, size_t dimension>
-    bool vector<coordinate_type, dimension>::operator==(const vector<coordinate_type, dimension>& _vect){
+    inline bool vector<coordinate_type, dimension>::operator==(const vector<coordinate_type, dimension>& _vect){
         for (size_t dim = 0 ; dim < dimension; ++dim){
-            if (!isEqual1D(coords[dim], _vect.coords[i]) ){
+            if (!isEqual1D(coords[dim], _vect.coords[dim]) ){
                 return false;
             }
         }
@@ -66,58 +68,58 @@ namespace CGA {
     }
     
     template<class coordinate_type, size_t dimension>
-    bool vector<coordinate_type, dimension>::operator!=(const vector<coordinate_type, dimension>& _vect){
+    inline bool vector<coordinate_type, dimension>::operator!=(const vector<coordinate_type, dimension>& _vect){
         return !*this==_vect; 
     }
 
     template<class coordinate_type, size_t dimension>
-    vector<coordinate_type, dimension> vector<coordinate_type, dimension>::operator+ (const vector<coordinate_type, dimension> & _vect) const{
+    inline vector<coordinate_type, dimension> vector<coordinate_type, dimension>::operator+ (const vector<coordinate_type, dimension> & _vect) const{
         std::array<coordinate_type, dimension> resultArray;
         for (size_t dim = 0 ; dim < dimension; ++dim){
-            result[dim] = coord[dim] + _vect.coords[dim]
+            resultArray[dim] = coords[dim] + _vect.coords[dim];
         }        
         return vector<coordinate_type, dimension> (resultArray); 
     } 
 
     template<class coordinate_type, size_t dimension>
-    vector<coordinate_type, dimension> vector<coordinate_type, dimension>::operator- (const vector<coordinate_type, dimension> & _vect) const{
+    inline vector<coordinate_type, dimension> vector<coordinate_type, dimension>::operator- (const vector<coordinate_type, dimension> & _vect) const{
         std::array<coordinate_type, dimension> resultArray;
         for (size_t dim = 0 ; dim < dimension; ++dim){
-            result[dim] = coord[dim] - _vect.coords[dim]
+            resultArray[dim] = coords[dim] - _vect.coords[dim];
         }        
         return vector<coordinate_type, dimension> (resultArray); 
     } 
     
     template<class coordinate_type, size_t dimension>
-    bool vector<coordinate_type, dimension>::operator< (const vector <coordinate_type, dimension>& _vect){
+    inline bool vector<coordinate_type, dimension>::operator< (const vector <coordinate_type, dimension>& _vect){
         // he said that vector comparison is usually calculated like so
         for (size_t dim=0;dim<dimension;++dim){
-            if (coords[dim] < _vect.coord[dim]){
-                return true
+            if (coords[dim] < _vect.coords[dim]){
+                return true;
             } 
             else if (coords[dim]>_vect[dim]){
-                return false
+                return false;
             }
         }
-        return false
+        return false;
     }
 
     template<class coordinate_type, size_t dimension>
-    bool vector<coordinate_type, dimension>::operator> (const vector <coordinate_type, dimension>& _vect){
+    inline bool vector<coordinate_type, dimension>::operator> (const vector <coordinate_type, dimension>& _vect){
         // he said that vector comparison is usually calculated like so
         for (size_t dim=0;dim<dimension;++dim){
             if (coords[dim] > _vect.coord[dim]){
-                return true
+                return true;
             } 
             else if (coords[dim] < _vect[dim]){
-                return false
+                return false;
             }
         }
-        return false
+        return false;
     }
         
     template<class coordinate_type, size_t dimension>
-    coordinate_type vector<coordinate_type, dimension>::operator[](int _index) const{
+    inline coordinate_type vector<coordinate_type, dimension>::operator[](int _index) const{
         if (_index >= coords.size()){
             std::cout << "Index out of bound";
             return coordinate_type();
@@ -127,10 +129,10 @@ namespace CGA {
     }
 
     template<class coordinate_type, size_t dimension>
-    void vector<coordinate_type, dimension>::assign (int _index, coordinate_type _value){
+    inline void vector<coordinate_type, dimension>::assign (int _index, coordinate_type _value){
         if (_index >= coords.size()){
             std::cout << "Index out of bound";
-            return coordinate_type();
+            return ;
         } 
         coords[_index] = _value;
     }
@@ -141,14 +143,14 @@ namespace CGA {
             return DBL_MIN;
         }
         double product = 0.0;
-        for (size_t dim = 0, dim< dimension;++dim){
+        for (size_t dim = 0; dim < dimension;++dim){
             product = product + _vect1.coords[dim] * _vect2.coords[dim];
         }
         return product;
     }
 
     template<class coordinate_type, size_t dimension>
-    double vector<coordinate_type, dimension>::magnitude() const{
+    inline double vector<coordinate_type, dimension>::magnitude() const{
         double magnitude = 0.0;
         for (size_t dim=0;dim<dimension;++dim){
             magnitude += coords[dim] * coords[dim];        
@@ -156,5 +158,13 @@ namespace CGA {
         return sqrt(magnitude);
     }
 
+    template<class coordinate_type,size_t dimension>
+    inline void vector<coordinate_type, dimension>::normalize (void){
+        double magnitude = 0.0;
+        magnitude = this->magnitude();
+        coords[X] /= magnitude;
+        coords[Y] /= magnitude;
+        coords[Z] /= magnitude;
+    }
 }
 
